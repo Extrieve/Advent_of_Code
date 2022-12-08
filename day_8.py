@@ -3,8 +3,6 @@ with open('input.txt') as input:
 
 height, width = len(trees), len(trees[0])
 
-# define a function that takes an iterator and a single integer value and return the index at which the integer value is <= the iterator value
-# we can't sort
 def find_first_index(iterator, value):
     for i, num in enumerate(iterator):
         if value <= num:
