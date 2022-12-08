@@ -1,5 +1,3 @@
-# from treelib import Node, Tree
-
 with open('input.txt') as file:
     commands = file.read().split('\n')
 
@@ -27,3 +25,19 @@ for command in commands:
 
 
 print(directories)
+
+total_sum = 0
+def access_all_children(dictionary):
+    # if is instance of dict then iterate through it else print key, value
+    if isinstance(dictionary, dict):
+        for key, value in dictionary.items():
+            if key != 'parent':
+                access_all_children(value)
+    else:
+        print(dictionary, type(dictionary))
+        global total_sum
+        if int(dictionary) <= 100_000:
+            total_sum += int(dictionary)
+
+access_all_children(directories.get('/'))
+print(total_sum)
