@@ -4,10 +4,7 @@ with open('input.txt') as input:
 height, width = len(trees), len(trees[0])
 
 def find_first_index(iterator, value):
-    for i, num in enumerate(iterator):
-        if value <= num:
-            return i + 1
-    return len(iterator)
+    return next((i + 1 for i, num in enumerate(iterator) if value <= num), len(iterator))
 
 # visible_trees = height * 2 + width * 2 - 4
 visible_trees = 1
