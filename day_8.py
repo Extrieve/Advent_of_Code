@@ -9,15 +9,7 @@ def find_first_index(iterator, value):
 # visible_trees = height * 2 + width * 2 - 4
 visible_trees = 1
 
-tree_columns = [[] for n in range(width)]
-
-for i in range(height):
-    for j in range(width):
-        tree_columns[j].append(trees[i][j])
-
-
-# print('\n'.join(tree_columns))
-# print(tree_columns)
+tree_columns = [list(column) for column in zip(*trees)] # Transpose
 print('\n'.join(trees))
 
 for i in range(1, height - 1):
@@ -45,20 +37,16 @@ for i in range(1, height - 1):
 
         up = tree_columns[j][:i].copy()
         up = up[::-1]
-        # print('UP',up)
         up_count += find_first_index(up, current)
 
         down = tree_columns[j][i+1:]
-        # print('Down',down)
         down_count += find_first_index(down, current)
 
         left = trees[i][:j]
         left = left[::-1]
-        # print('LEFT',left)
         left_count += find_first_index(left, current)
 
         right = trees[i][j+1:]
-        # print('RIGHT',right)
         right_count += find_first_index(right, current)
 
         local_product = up_count * down_count * left_count * right_count
