@@ -35,7 +35,7 @@ for i in range(1, height - 1):
         ### PART II
         up_count, down_count, left_count, right_count = 0, 0, 0, 0
 
-        up = tree_columns[j][:i].copy()
+        up = tree_columns[j][:i]
         up = up[::-1]
         up_count += find_first_index(up, current)
 
