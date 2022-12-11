@@ -17,11 +17,8 @@ class Node:
         # Add the child node to the list of children
         self.children.append(child)
 
-    # Define a method to add a file to this node
     def add_file(self, name, size):
-        # Add the file to the list of files
-        file = File(name, size)
-        self.files.append(file)
+        self.files.append(File(name, size))
 
     # Define a method to represent the node as a string
     def __repr__(self):
@@ -57,8 +54,6 @@ class Tree:
         node = Node(name, self.current)
         # Add the new node to the current node's children
         self.current.add_child(node)
-        # Set the current node to the new directory
-        self.current = node
 
     # Define a method to go up one level in the tree
     def go_up(self):
@@ -75,31 +70,25 @@ class Tree:
                     break
 
     def go_to_root(self):
-        self.current = self.root
+        while self.current.parent is not None:
+            self.current = self.current.parent
 
     # Define a method to add a file to the current node
     def add_file(self, name, size):
-        # Create a new file
-        file = File(name, size)
-        # Add the file to the current node
-        self.current.add_file(file)
+        self.current.add_file(name, size)
 
-    # Define a method to print the tree
-    def print_tree(self):
-        # Create a list to store the nodes to print
-        nodes = [self.root]
-        # Loop while there are still nodes to print
-        while nodes:
-            # Get the next node to print
-            node = nodes.pop(0)
-            # Print the node name
-            print(node.name)
-            # Print the files in the node
-            for file in node.files:
-                print(f'  {file.name} ({file.size})')
-            # Add the node's children to the list of nodes to print
-            nodes.extend(node.children)
+    # Define a method to print the tree, print a node and its children recursively
+    def print_tree(self, node=None, level=0):
+        # If no node is passed in, start with the root node
+        if node is None:
+            node = self.root
 
+        # Print the node name and its files
+        print(' ' * level + node.name, node.files)
+
+        # Print the children of the node
+        for child in node.children:
+            self.print_tree(child, level + 1)
 
 # Create a new tree
 tree = Tree()
@@ -113,12 +102,15 @@ for command in commands:
             elif '/' in directory:
                 tree.go_to_root()
             else:
+                print('Changed directory:', directory)
                 tree.go_down(directory)
+                print('Current Node:', tree.current.name, '\n')
     else:
         command = command.split()
         if 'dir' in command:
+            print('Added directory:', command[-1], 'in', tree.current.name)
             tree.current.add_child(Node(command[-1], tree.current))
         else:
-            tree.current.add_file(command[1], command[0])
+            tree.add_file(command[1], command[0])
 
 tree.print_tree()
