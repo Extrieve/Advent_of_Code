@@ -18,7 +18,16 @@ class Node:
         self.children.append(child)
 
     def add_file(self, name, size):
-        self.files.append(File(name, size))
+        self.files.append(File(name, int(size)))
+
+    def directory_size(self):
+        return sum([file.size for file in self.files])
+
+    def total_directory_size(self):
+        total = self.directory_size()
+        for child in self.children:
+            total += child.total_directory_size()
+        return total
 
     # Define a method to represent the node as a string
     def __repr__(self):
@@ -75,7 +84,7 @@ class Tree:
 
     # Define a method to add a file to the current node
     def add_file(self, name, size):
-        self.current.add_file(name, size)
+        self.current.add_file(name, int(size))
 
     # Define a method to print the tree, print a node and its children recursively
     def print_tree(self, node=None, level=0):
@@ -113,4 +122,13 @@ for command in commands:
         else:
             tree.add_file(command[1], command[0])
 
-tree.print_tree()
+
+qualified_directories = []
+def access_all_children(node):
+    if node.total_directory_size() <= 100_000:
+        qualified_directories.append(node.total_directory_size())
+    for child in node.children:
+        access_all_children(child)
+
+access_all_children(tree.root)
+print('Qualified Directories:', sum(qualified_directories))
