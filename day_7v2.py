@@ -111,24 +111,70 @@ for command in commands:
             elif '/' in directory:
                 tree.go_to_root()
             else:
-                print('Changed directory:', directory)
+                # print('Changed directory:', directory)
                 tree.go_down(directory)
-                print('Current Node:', tree.current.name, '\n')
+                # print('Current Node:', tree.current.name, '\n')
     else:
         command = command.split()
         if 'dir' in command:
-            print('Added directory:', command[-1], 'in', tree.current.name)
+            # print('Added directory:', command[-1], 'in', tree.current.name)
             tree.current.add_child(Node(command[-1], tree.current))
         else:
             tree.add_file(command[1], command[0])
 
 
+max_space, update_size = 70_000_000, 30_000_000
+space_needed = max_space - tree.root.total_directory_size()
+print('Space Needed:', space_needed)
+
 qualified_directories = []
 def access_all_children(node):
-    if node.total_directory_size() <= 100_000:
+    if node.total_directory_size() >= space_needed:
         qualified_directories.append(node.total_directory_size())
     for child in node.children:
         access_all_children(child)
 
-access_all_children(tree.root)
-print('Qualified Directories:', sum(qualified_directories))
+min_node = None
+def minumum_viable_space(node):
+    global min_node
+    if min_node is None:
+        min_node = node
+
+    if node.total_directory_size() < min_node.total_directory_size() and node.total_directory_size() >= space_needed:
+        min_node = node
+
+    for child in node.children:
+        minumum_viable_space(child)
+
+
+minumum_viable_space(tree.root)
+total = 0
+least = None
+for child in sorted(min_node.children, key=lambda x: x.total_directory_size())[2:]:
+    print(child.name, child.total_directory_size())
+    total += child.total_directory_size() if child.total_directory_size() < space_needed - total else 0
+    least = child
+print('Minimum Viable Space:', min_node.total_directory_size())
+print()
+for child in sorted(least.children, key=lambda x: x.total_directory_size(), ):
+    print(child.name, child.total_directory_size())
+    total += child.total_directory_size() if child.total_directory_size() < space_needed - total else 0
+
+print(total)
+
+# tst = tree.root.children
+# for child in tst:
+#     qualified_directories.append((child, child.total_directory_size()))
+
+# best = sorted(qualified_directories, key=lambda x: x[1])[-1]
+# candidates = best[0].children
+# ts = []
+# for child in candidates:
+#     amount = child.total_directory_size()
+#     ts.append(amount)
+#     print(amount)
+
+# print(sum(sorted(ts)[2:]))
+
+# access_all_children(tree.root)
+# print(sorted(qualified_directories))
