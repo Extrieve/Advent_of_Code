@@ -8,14 +8,16 @@ for move in moves:
     if len(move) > 1:
         for i in range(2):
             print(f'Starting at {counter} and moving {move[1]} X IS {X=}')
+            if counter == 40: counter = 0
             counter += 1
-            sprites.append('#' if abs(X - counter) <= 1 else '.')
+            sprites.append('#' if counter in [X - 1, X, X + 1] else '.')
             if i % 2 != 0: X += int(move[1])
             print(f'Ending at {counter} and moving {move[1]} X IS {X=}')
     else:
         print(f'Starting at {counter} and moving {move[0]} times')
+        if counter == 40: counter = 0
         counter += 1
-        sprites.append('#' if abs(X - counter) <= 1 else '.')
+        sprites.append('#' if counter in [X - 1, X, X + 1] else '.')
         print(f'Starting at {counter} and moving {move[0]} times')
 
 
