@@ -67,7 +67,6 @@ def main():
                 j_loop += 1
 
             j = j_loop + 1 if j_loop + 1 < cols else j_loop
-            j = j_loop + 1 if j_loop + 1 < cols else j_loop
 
             
             # print(current_digit)
